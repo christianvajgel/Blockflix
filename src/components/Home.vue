@@ -54,7 +54,17 @@
                         {{ movie.description }} <br> {{ movie.price | formatPrice("U$") }}
                     </b-card-text>
 
-                    <b-button href="#" v-on:click="addToCart(movie)" variant="success">Rent!</b-button>
+                    <b-button href="#"
+                              v-on:click="addToCart(movie)"
+                              v-if="validateMovieAdditionToCart(movie)"
+                              variant="success">Rent!</b-button>
+                    <b-button
+                              v-on:click="addToCart(movie)"
+                              v-else-if="movie.availableQuantity === 1"
+                              variant="outline-warning">Limited quantity!</b-button>
+                    <b-button
+                              v-else
+                              variant="outline-danger disabled">Out of stock!</b-button>
                 </b-card>
 
             </div>
@@ -75,46 +85,51 @@
                             title: 'Movie 1',
                             description: 'Description of Movie #1',
                             price: 10,
-                            image: 'https://i.picsum.photos/id/866/200/300.jpg'
+                            image: 'https://i.picsum.photos/id/866/200/300.jpg',
+                            availableQuantity: 5
                         },
                         {
                             id: 2,
                             title: 'Movie 2',
                             description: 'Description of Movie #2',
                             price: 20,
-                            image: 'https://i.picsum.photos/id/1004/200/300.jpg'
+                            image: 'https://i.picsum.photos/id/1004/200/300.jpg',
+                            availableQuantity: 5
                         },
                         {
                             id: 3,
                             title: 'Movie 3',
                             description: 'Description of Movie #3',
                             price: 30,
-                            image: 'https://i.picsum.photos/id/1011/200/300.jpg'
+                            image: 'https://i.picsum.photos/id/1011/200/300.jpg',
+                            availableQuantity: 5
                         },
                         {
                             id: 4,
                             title: 'Movie 4',
                             description: 'Description of Movie #4',
                             price: 40,
-                            image: 'https://i.picsum.photos/id/1025/200/300.jpg'
+                            image: 'https://i.picsum.photos/id/1025/200/300.jpg',
+                            availableQuantity: 5
                         },
                         {
                             id: 5,
                             title: 'Movie 5',
                             description: 'Description of Movie #5',
                             price: 50,
-                            image: 'https://i.picsum.photos/id/1035/200/300.jpg'
+                            image: 'https://i.picsum.photos/id/1035/200/300.jpg',
+                            availableQuantity: 5
                         },
                         {
                             id: 6,
                             title: 'Movie 6',
                             description: 'Description of Movie #6',
                             price: 60,
-                            image: 'https://i.picsum.photos/id/239/200/300.jpg'
+                            image: 'https://i.picsum.photos/id/239/200/300.jpg',
+                            availableQuantity: 5
                         }
                     ],
                 cart:[
-
                 ]
             }
         },
@@ -130,6 +145,26 @@
         methods: {
             addToCart: function (movie) {
                 this.cart.push(movie.id);
+            },
+            movieQuantityInCart: function (movie) {
+                let quantity = 0;
+                for (let i = 0; i < this.cart.length; i++) {
+                    if (movie.id === this.cart[i]){
+                        quantity++;
+                    }
+                }
+                return quantity;
+            },
+            validateMovieAdditionToCart: function (movie) {
+                // if (movie.availableQuantity > this.movieQuantityInCart(movie)){
+                //     return 1;
+                // } else if(movie.availableQuantity > this.movieQuantityInCart(movie)
+                // && movie.availableQuantity === 1){
+                //     return 0;
+                // } else {
+                //     return -1;
+                // }
+                return movie.availableQuantity > this.movieQuantityInCart(movie);
             }
         },
         computed: {
