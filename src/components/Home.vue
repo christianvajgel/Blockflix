@@ -13,6 +13,13 @@
                     <p v-else>You have {{ cartQuantity }} movies in your cart.</p>
                 </b-toast>
             </div>
+
+            <div>
+                <b-button class="mb-2" variant="info" @click="showCart">
+                    Cart: {{ movieQuantityInCart }} movies.
+                </b-button>
+            </div>
+
         </div>
 
         <h3 v-if="hours >= 9 && hours < 17" id="open">OPEN</h3>
@@ -39,7 +46,7 @@
             <b-button href="#" variant="primary">Rent!</b-button>
         </b-card>
 
-        <div class="row">
+        <div class="row" v-if="showMovies">
             <div class="col-sm-4" v-bind:key="movie.id" v-for="movie in movies">
                 <b-card
                         :title="movie.title"
@@ -66,8 +73,164 @@
                               v-else
                               variant="outline-danger disabled">Out of stock!</b-button>
                 </b-card>
-
             </div>
+        </div>
+
+        <div class="row" v-else>
+        <b-container>
+            <b-card bg-variant="light" style="text-align: left !important;">
+                <b-form-group
+                        label-cols-lg="3"
+                        label="Checkout"
+                        label-size="lg"
+                        label-class="font-weight-bold pt-0"
+                        class="mb-0">
+
+                    <b-form-group
+                            id="field_first_name"
+                            label-cols="4"
+                            label-cols-lg="2"
+                            label="First name"
+                            label-for="first_name"
+                            :invalid-feedback="first_name_invalidFeedback"
+                            :valid-feedback="first_name_validFeedback"
+                            :state="first_name_State">
+                        <b-form-input
+                                id="first_name"
+                                type="text"
+                                placeholder="Enter your first name"
+                                v-model="order.first_name"
+                                :state="first_name_State"
+                                trim>
+                        </b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                            id="field_last_name"
+                            label-cols="4"
+                            label-cols-lg="2"
+                            label="Last name"
+                            label-for="last_name"
+                            :invalid-feedback="last_name_invalidFeedback"
+                            :valid-feedback="last_name_validFeedback"
+                            :state="last_name_State">
+                        <b-form-input
+                                id="last_name"
+                                type="text"
+                                placeholder="Enter your last name"
+                                v-model="order.last_name"
+                                :state="last_name_State"
+                                trim>
+                        </b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                            id="field_street"
+                            label-cols="4"
+                            label-cols-lg="2"
+                            label="Street"
+                            label-for="street"
+                            :invalid-feedback="street_invalidFeedback"
+                            :valid-feedback="street_validFeedback"
+                            :state="street_State">
+                        <b-form-input
+                                id="street"
+                                type="text"
+                                placeholder="Enter your street"
+                                v-model="order.street"
+                                :state="street_State"
+                                trim>
+                        </b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                            id="field_city"
+                            label-cols="4"
+                            label-cols-lg="2"
+                            label="City"
+                            label-for="city"
+                            :invalid-feedback="city_invalidFeedback"
+                            :valid-feedback="city_validFeedback"
+                            :state="city_State">
+                        <b-form-input
+                                id="city"
+                                type="text"
+                                placeholder="Enter your city"
+                                v-model="order.city"
+                                :state="city_State"
+                                trim>
+                        </b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                            id="field_state"
+                            label-cols="4"
+                            label-cols-lg="2"
+                            label="State"
+                            label-for="state"
+                            :invalid-feedback="state_invalidFeedback"
+                            :valid-feedback="state_validFeedback"
+                            :state="state_State">
+                        <b-form-input
+                                id="state"
+                                type="text"
+                                placeholder="Enter your state"
+                                v-model="order.state"
+                                :state="state_State"
+                                trim>
+                        </b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                            id="field_cep"
+                            label-cols="4"
+                            label-cols-lg="2"
+                            label="CEP"
+                            label-for="cep"
+                            :invalid-feedback="cep_invalidFeedback"
+                            :valid-feedback="cep_validFeedback"
+                            :state="cep_State">
+                        <b-form-input
+                                id="cep"
+                                type="text"
+                                placeholder="Enter your CEP"
+                                v-model="order.cep"
+                                :state="cep_State"
+                                trim>
+                        </b-form-input>
+                    </b-form-group>
+
+                    <b-form-group
+                            id="field_checkbox"
+                            label-cols="4"
+                            label-cols-lg="2"
+                            label="Pay on delivery?"
+                            label-for="checkbox">
+                        <b-form-checkbox
+                                switch
+                                id="checkbox"
+                                v-model="order.payOnDelivery"
+                                name="checkbox"
+                                value="accepted"
+                                unchecked-value="not_accepted">
+                        </b-form-checkbox>
+                    </b-form-group>
+
+                    <b-form-group
+                            id="field_radio"
+                            label-cols="4"
+                            label-cols-lg="2"
+                            label="Delivery period?"
+                            label-for="radio">
+                        <b-form-radio-group
+                                id="radio"
+                                v-model="order.delivery"
+                                :options="deliveryOptions"
+                                name="radio-options"></b-form-radio-group>
+                    </b-form-group>
+                </b-form-group>
+            </b-card>
+        </b-container>
         </div>
     </div>
 </template>
@@ -77,6 +240,24 @@
         name: 'app',
         data: function() {
             return {
+                time: new Date().getHours,
+                order: {
+                    first_name: "",
+                    last_name: "",
+                    street: "",
+                    city: "",
+                    state: "",
+                    cep: "",
+                    payOnDelivery: "",
+                    delivery: ""
+
+                },
+                deliveryOptions: [
+                    {text:"Morning", value: "first"},
+                    {text:"Afternoon", value: "second"},
+                    {text:"Evening", value: "third"},
+                ],
+                showMovies: true,
                 title: "Blockflix",
                 hours: new Date().getHours(),
                 movies: [
@@ -143,6 +324,9 @@
             }
         },
         methods: {
+            showCart() {
+                this.showMovies = this.showMovies ? false : true;
+            },
             addToCart: function (movie) {
                 this.cart.push(movie.id);
             },
@@ -170,6 +354,96 @@
         computed: {
             cartQuantity: function () {
                 return this.cart.length;
+            },
+            first_name_State() {
+                return this.order.first_name.length >= 4;
+            },
+            first_name_invalidFeedback() {
+                if (this.order.first_name.length >= 4){
+                    return "";
+                } else if (this.order.first_name.length > 0){
+                    return "Enter a name with at least four characters.";
+                } else {
+                    return "Enter something...";
+                }
+            },
+            first_name_validFeedback() {
+                return this.first_name_State === true ? "Valid first name!" : "";
+            },
+            last_name_State() {
+                return this.order.last_name.length >= 4;
+            },
+            last_name_invalidFeedback() {
+                if (this.order.last_name.length >= 4){
+                    return "";
+                } else if (this.order.last_name.length > 0){
+                    return "Enter a name with at least four characters.";
+                } else {
+                    return "Enter something...";
+                }
+            },
+            last_name_validFeedback() {
+                return this.last_name_State === true ? "Valid last name!" : "";
+            },
+            street_State() {
+                return this.order.street.length >= 5;
+            },
+            street_invalidFeedback() {
+                if (this.order.street.length >= 5){
+                    return "";
+                } else if (this.order.street.length > 0){
+                    return "Enter an street with at least five characters.";
+                } else {
+                    return "Enter something...";
+                }
+            },
+            street_validFeedback() {
+                return this.street_State === true ? "Valid street!" : "";
+            },
+            city_State() {
+                return this.order.city.length >= 6;
+            },
+            city_invalidFeedback() {
+                if (this.order.city.length >= 6){
+                    return "";
+                } else if (this.order.city.length > 0){
+                    return "Enter a city with at least six characters.";
+                } else {
+                    return "Enter something...";
+                }
+            },
+            city_validFeedback() {
+                return this.city_State === true ? "Valid city!" : "";
+            },
+            state_State() {
+                return this.order.state.length >= 8;
+            },
+            state_invalidFeedback() {
+                if (this.order.state.length >= 8){
+                    return "";
+                } else if (this.order.state.length > 0){
+                    return "Enter a city with at least eight characters.";
+                } else {
+                    return "Enter something...";
+                }
+            },
+            state_validFeedback() {
+                return this.state_State === true ? "Valid state!" : "";
+            },
+            cep_State() {
+                return this.order.cep.length >= 9;
+            },
+            cep_invalidFeedback() {
+                if (this.order.cep.length >= 9){
+                    return "";
+                } else if (this.order.cep.length > 0){
+                    return "Enter a CEP with at least nine characters.";
+                } else {
+                    return "Enter something...";
+                }
+            },
+            cep_validFeedback() {
+                return this.cep_State === true ? "Valid CEP!" : "";
             }
         }
     };
