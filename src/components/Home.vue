@@ -1,5 +1,5 @@
 <template>
-    <div id="app" class="container">
+    <b-container id="app" class="container">
         <h1>Welcome to the {{ title }}!</h1>
         <div>
             <div>
@@ -37,8 +37,7 @@
                 img-top
                 tag="article"
                 style="max-width: 20rem;"
-                class="mb-2"
-        >
+                class="mb-2">
             <b-card-text>
                 Description of Movie 1 and we have a longer phrase because we need to test our page. You should rent this movie.
             </b-card-text>
@@ -46,8 +45,8 @@
             <b-button href="#" variant="primary">Rent!</b-button>
         </b-card>
 
-        <div class="row" v-if="showMovies">
-            <div class="col-sm-4" v-bind:key="movie.id" v-for="movie in movies">
+        <b-container class="row" v-if="showMovies">
+            <b-container class="col-sm-4" v-bind:key="movie.id" v-for="movie in movies">
                 <b-card
                         :title="movie.title"
                         :img-src="movie.image"
@@ -55,8 +54,7 @@
                         img-top
                         tag="article"
                         style="max-width: 20rem;"
-                        class="mb-2"
-                >
+                        class="mb-2">
                     <b-card-text>
                         {{ movie.description }} <br> {{ movie.price | formatPrice("U$") }}
                     </b-card-text>
@@ -73,166 +71,171 @@
                               v-else
                               variant="outline-danger disabled">Out of stock!</b-button>
                 </b-card>
-            </div>
-        </div>
-
-        <div class="row" v-else>
-        <b-container>
-            <b-card bg-variant="light" style="text-align: left !important;">
-                <b-form-group
-                        label-cols-lg="3"
-                        label="Checkout"
-                        label-size="lg"
-                        label-class="font-weight-bold pt-0"
-                        class="mb-0">
-
-                    <b-form-group
-                            id="field_first_name"
-                            label-cols="4"
-                            label-cols-lg="2"
-                            label="First name"
-                            label-for="first_name"
-                            :invalid-feedback="first_name_invalidFeedback"
-                            :valid-feedback="first_name_validFeedback"
-                            :state="first_name_State">
-                        <b-form-input
-                                id="first_name"
-                                type="text"
-                                placeholder="Enter your first name"
-                                v-model="order.first_name"
-                                :state="first_name_State"
-                                trim>
-                        </b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                            id="field_last_name"
-                            label-cols="4"
-                            label-cols-lg="2"
-                            label="Last name"
-                            label-for="last_name"
-                            :invalid-feedback="last_name_invalidFeedback"
-                            :valid-feedback="last_name_validFeedback"
-                            :state="last_name_State">
-                        <b-form-input
-                                id="last_name"
-                                type="text"
-                                placeholder="Enter your last name"
-                                v-model="order.last_name"
-                                :state="last_name_State"
-                                trim>
-                        </b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                            id="field_street"
-                            label-cols="4"
-                            label-cols-lg="2"
-                            label="Street"
-                            label-for="street"
-                            :invalid-feedback="street_invalidFeedback"
-                            :valid-feedback="street_validFeedback"
-                            :state="street_State">
-                        <b-form-input
-                                id="street"
-                                type="text"
-                                placeholder="Enter your street"
-                                v-model="order.street"
-                                :state="street_State"
-                                trim>
-                        </b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                            id="field_city"
-                            label-cols="4"
-                            label-cols-lg="2"
-                            label="City"
-                            label-for="city"
-                            :invalid-feedback="city_invalidFeedback"
-                            :valid-feedback="city_validFeedback"
-                            :state="city_State">
-                        <b-form-input
-                                id="city"
-                                type="text"
-                                placeholder="Enter your city"
-                                v-model="order.city"
-                                :state="city_State"
-                                trim>
-                        </b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                            id="field_state"
-                            label-cols="4"
-                            label-cols-lg="2"
-                            label="State"
-                            label-for="state"
-                            :invalid-feedback="state_invalidFeedback"
-                            :valid-feedback="state_validFeedback"
-                            :state="state_State">
-                        <b-form-input
-                                id="state"
-                                type="text"
-                                placeholder="Enter your state"
-                                v-model="order.state"
-                                :state="state_State"
-                                trim>
-                        </b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                            id="field_cep"
-                            label-cols="4"
-                            label-cols-lg="2"
-                            label="CEP"
-                            label-for="cep"
-                            :invalid-feedback="cep_invalidFeedback"
-                            :valid-feedback="cep_validFeedback"
-                            :state="cep_State">
-                        <b-form-input
-                                id="cep"
-                                type="text"
-                                placeholder="Enter your CEP"
-                                v-model="order.cep"
-                                :state="cep_State"
-                                trim>
-                        </b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                            id="field_checkbox"
-                            label-cols="4"
-                            label-cols-lg="2"
-                            label="Pay on delivery?"
-                            label-for="checkbox">
-                        <b-form-checkbox
-                                switch
-                                id="checkbox"
-                                v-model="order.payOnDelivery"
-                                name="checkbox"
-                                value="accepted"
-                                unchecked-value="not_accepted">
-                        </b-form-checkbox>
-                    </b-form-group>
-
-                    <b-form-group
-                            id="field_radio"
-                            label-cols="4"
-                            label-cols-lg="2"
-                            label="Delivery period?"
-                            label-for="radio">
-                        <b-form-radio-group
-                                id="radio"
-                                v-model="order.delivery"
-                                :options="deliveryOptions"
-                                name="radio-options"></b-form-radio-group>
-                    </b-form-group>
-                </b-form-group>
-            </b-card>
+            </b-container>
         </b-container>
-        </div>
-    </div>
+
+        <b-container class="row" v-else>
+            <b-container>
+                <b-card bg-variant="light" style="text-align: left">
+                    <b-form-group
+                            label-cols-lg="3"
+                            label="Checkout"
+                            label-size="lg"
+                            label-class="font-weight-bold pt-0"
+                            class="mb-0">
+
+                        <b-form-group
+                                id="field_first_name"
+                                label-cols="4"
+                                label-cols-lg="2"
+                                label="First name"
+                                label-for="first_name"
+                                :invalid-feedback="first_name_invalidFeedback"
+                                :valid-feedback="first_name_validFeedback"
+                                :state="first_name_State">
+                            <b-form-input
+                                    id="first_name"
+                                    type="text"
+                                    placeholder="Enter your first name"
+                                    v-model="order.first_name"
+                                    :state="first_name_State"
+                                    trim>
+                            </b-form-input>
+                        </b-form-group>
+
+                        <b-form-group
+                                id="field_last_name"
+                                label-cols="4"
+                                label-cols-lg="2"
+                                label="Last name"
+                                label-for="last_name"
+                                :invalid-feedback="last_name_invalidFeedback"
+                                :valid-feedback="last_name_validFeedback"
+                                :state="last_name_State">
+                            <b-form-input
+                                    id="last_name"
+                                    type="text"
+                                    placeholder="Enter your last name"
+                                    v-model="order.last_name"
+                                    :state="last_name_State"
+                                    trim>
+                            </b-form-input>
+                        </b-form-group>
+
+                        <b-form-group
+                                id="field_street"
+                                label-cols="4"
+                                label-cols-lg="2"
+                                label="Street"
+                                label-for="street"
+                                :invalid-feedback="street_invalidFeedback"
+                                :valid-feedback="street_validFeedback"
+                                :state="street_State">
+                            <b-form-input
+                                    id="street"
+                                    type="text"
+                                    placeholder="Enter your street"
+                                    v-model="order.street"
+                                    :state="street_State"
+                                    trim>
+                            </b-form-input>
+                        </b-form-group>
+
+                        <b-form-group
+                                id="field_city"
+                                label-cols="4"
+                                label-cols-lg="2"
+                                label="City"
+                                label-for="city"
+                                :invalid-feedback="city_invalidFeedback"
+                                :valid-feedback="city_validFeedback"
+                                :state="city_State">
+                            <b-form-input
+                                    id="city"
+                                    type="text"
+                                    placeholder="Enter your city"
+                                    v-model="order.city"
+                                    :state="city_State"
+                                    trim>
+                            </b-form-input>
+                        </b-form-group>
+
+                        <b-form-group
+                                id="field_state"
+                                label-cols="4"
+                                label-cols-lg="2"
+                                label="State"
+                                label-for="state"
+                                :invalid-feedback="state_invalidFeedback"
+                                :valid-feedback="state_validFeedback"
+                                :state="state_State">
+                            <b-form-input
+                                    id="state"
+                                    type="text"
+                                    placeholder="Enter your state"
+                                    v-model="order.state"
+                                    :state="state_State"
+                                    trim>
+                            </b-form-input>
+                        </b-form-group>
+
+                        <b-form-group
+                                id="field_cep"
+                                label-cols="4"
+                                label-cols-lg="2"
+                                label="CEP"
+                                label-for="cep"
+                                :invalid-feedback="cep_invalidFeedback"
+                                :valid-feedback="cep_validFeedback"
+                                :state="cep_State">
+                            <b-form-input
+                                    id="cep"
+                                    type="text"
+                                    placeholder="Enter your CEP"
+                                    v-model="order.cep"
+                                    :state="cep_State"
+                                    trim>
+                            </b-form-input>
+                        </b-form-group>
+
+                        <b-form-group
+                                id="field_checkbox"
+                                label-cols="4"
+                                label-cols-lg="2"
+                                label="Pay on delivery?"
+                                label-for="checkbox">
+                            <b-form-checkbox
+                                    id="payOnDelivery"
+                                    name="checkbox"
+                                    class="form-check-input"
+                                    v-bind:true-value="order.yesOnDelivery"
+                                    v-bind:false-value="order.noOnDelivery"
+                                    v-model="order.payOnDelivery">
+                            </b-form-checkbox>
+                        </b-form-group>
+
+                        <b-form-group
+                                id="field_radio"
+                                label-cols="4"
+                                label-cols-lg="2"
+                                label="Delivery period?"
+                                label-for="radio">
+                            <b-form-radio-group v-model="value" :options="order.deliveryOptions" :state="radioButton_state" name="radio-validation">
+                                <b-form-invalid-feedback :state="radioButton_state">Please select one day period.</b-form-invalid-feedback>
+                                <b-form-valid-feedback :state="radioButton_state">Valid option!</b-form-valid-feedback>
+                            </b-form-radio-group>
+                        </b-form-group>
+
+                    </b-form-group>
+
+                    <b-form-group id="buttonAlignment">
+                        <b-button variant="dark" v-on:click="submitForm" >Pay order</b-button>
+                    </b-form-group>
+
+                </b-card>
+            </b-container>
+        </b-container>
+    </b-container>
 </template>
 
 <script>
@@ -240,6 +243,7 @@
         name: 'app',
         data: function() {
             return {
+                value: null,
                 time: new Date().getHours,
                 order: {
                     first_name: "",
@@ -248,17 +252,19 @@
                     city: "",
                     state: "",
                     cep: "",
-                    payOnDelivery: "",
-                    delivery: ""
-
+                    payOnDelivery: "No",
+                    yesOnDelivery: "Yes",
+                    noOnDelivery: "No",
+                    delivery: this.value,
+                    deliveryOptions: [
+                        {text:"Morning", value: "first"},
+                        {text:"Afternoon", value: "second"},
+                        {text:"Evening", value: "third"},
+                    ],
                 },
-                deliveryOptions: [
-                    {text:"Morning", value: "first"},
-                    {text:"Afternoon", value: "second"},
-                    {text:"Evening", value: "third"},
-                ],
                 showMovies: true,
                 title: "Blockflix",
+                cart:[],
                 hours: new Date().getHours(),
                 movies: [
                         {
@@ -310,8 +316,13 @@
                             availableQuantity: 5
                         }
                     ],
-                cart:[
-                ]
+                states:{
+                    def: "Please select an option",
+                    RJ:"Rio de Janeiro",
+                    MG:"Minas Gerais",
+                    SP:"São Paulo",
+                    ES:"Espírito Santo"
+                },
             }
         },
         filters: {
@@ -349,6 +360,9 @@
                 //     return -1;
                 // }
                 return movie.availableQuantity > this.movieQuantityInCart(movie);
+            },
+            submitForm() {
+                alert("Order created.");
             }
         },
         computed: {
@@ -444,7 +458,10 @@
             },
             cep_validFeedback() {
                 return this.cep_State === true ? "Valid CEP!" : "";
-            }
+            },
+            radioButton_state() {
+                return Boolean(this.value);
+            },
         }
     };
 </script>
@@ -473,6 +490,10 @@
 
     .b-toast * {
         font-style: italic !important;
+    }
+
+    #buttonAlignment {
+        text-align: right !important;
     }
 
 </style>
