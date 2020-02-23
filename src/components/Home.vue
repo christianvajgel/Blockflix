@@ -59,17 +59,32 @@
                         {{ movie.description }} <br> {{ movie.price | formatPrice("U$") }}
                     </b-card-text>
 
+                    <b-container>
+                        <span v-if="movie.ranking === 5.0"><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-fill/></span>
+                        <span v-else-if="movie.ranking === 4.5"><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-half/></span>
+                        <span v-else-if="movie.ranking === 4.0"><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-fill/><b-icon-star/></span>
+                        <span v-else-if="movie.ranking === 3.5"><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-half/><b-icon-star/></span>
+                        <span v-else-if="movie.ranking === 3.0"><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-fill/><b-icon-star/><b-icon-star/></span>
+                        <span v-else-if="movie.ranking === 2.5"><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-half/><b-icon-star/><b-icon-star/></span>
+                        <span v-else-if="movie.ranking === 2.0"><b-icon-star-fill/><b-icon-star-fill/><b-icon-star/><b-icon-star/><b-icon-star/></span>
+                        <span v-else-if="movie.ranking === 1.5"><b-icon-star-fill/><b-icon-star-half/><b-icon-star/><b-icon-star/><b-icon-star/></span>
+                        <span v-else-if="movie.ranking === 1.0"><b-icon-star-fill/><b-icon-star/><b-icon-star/><b-icon-star/><b-icon-star/></span>
+                        <span v-else-if="movie.ranking === 0.5"><b-icon-star-half/><b-icon-star/><b-icon-star/><b-icon-star/><b-icon-star/></span>
+                        <span v-else v-for="n in 5" :key="n"><b-icon-star/></span>
+                    </b-container>
+                    <br><br>
+
                     <b-button href="#"
                               v-on:click="addToCart(movie)"
-                              v-if="validateMovieAdditionToCart(movie)"
-                              variant="success">Rent!</b-button>
+                              v-if="movie.availableQuantity > 1"
+                              variant="outline-success">Rent! {{ movie.availableQuantity }}</b-button>
                     <b-button
                               v-on:click="addToCart(movie)"
                               v-else-if="movie.availableQuantity === 1"
-                              variant="outline-warning">Limited quantity!</b-button>
+                              variant="outline-warning" id="btn">Limited quantity! {{ movie.availableQuantity }}</b-button>
                     <b-button
                               v-else
-                              variant="outline-danger disabled">Out of stock!</b-button>
+                              variant="outline-danger disabled">Out of stock! {{ movie.availableQuantity }}</b-button>
                 </b-card>
             </b-container>
         </b-container>
@@ -165,18 +180,8 @@
                                 label-cols="4"
                                 label-cols-lg="2"
                                 label="State"
-                                label-for="state"
-                                :invalid-feedback="state_invalidFeedback"
-                                :valid-feedback="state_validFeedback"
-                                :state="state_State">
-                            <b-form-input
-                                    id="state"
-                                    type="text"
-                                    placeholder="Enter your state"
-                                    v-model="order.state"
-                                    :state="state_State"
-                                    trim>
-                            </b-form-input>
+                                label-for="state">
+                            <b-form-select v-model="selected" :options="states"></b-form-select>
                         </b-form-group>
 
                         <b-form-group
@@ -190,11 +195,10 @@
                                 :state="cep_State">
                             <b-form-input
                                     id="cep"
-                                    type="text"
+                                    type="number"
                                     placeholder="Enter your CEP"
                                     v-model="order.cep"
-                                    :state="cep_State"
-                                    trim>
+                                    :state="cep_State">
                             </b-form-input>
                         </b-form-group>
 
@@ -273,7 +277,8 @@
                             description: 'Description of Movie #1',
                             price: 10,
                             image: 'https://i.picsum.photos/id/866/200/300.jpg',
-                            availableQuantity: 5
+                            availableQuantity: 5,
+                            ranking: 5
                         },
                         {
                             id: 2,
@@ -281,7 +286,8 @@
                             description: 'Description of Movie #2',
                             price: 20,
                             image: 'https://i.picsum.photos/id/1004/200/300.jpg',
-                            availableQuantity: 5
+                            availableQuantity: 5,
+                            ranking: 4.5
                         },
                         {
                             id: 3,
@@ -289,7 +295,8 @@
                             description: 'Description of Movie #3',
                             price: 30,
                             image: 'https://i.picsum.photos/id/1011/200/300.jpg',
-                            availableQuantity: 5
+                            availableQuantity: 5,
+                            ranking: 3.0
                         },
                         {
                             id: 4,
@@ -297,7 +304,8 @@
                             description: 'Description of Movie #4',
                             price: 40,
                             image: 'https://i.picsum.photos/id/1025/200/300.jpg',
-                            availableQuantity: 5
+                            availableQuantity: 5,
+                            ranking: 2.5
                         },
                         {
                             id: 5,
@@ -305,7 +313,8 @@
                             description: 'Description of Movie #5',
                             price: 50,
                             image: 'https://i.picsum.photos/id/1035/200/300.jpg',
-                            availableQuantity: 5
+                            availableQuantity: 5,
+                            ranking: 1
                         },
                         {
                             id: 6,
@@ -313,16 +322,71 @@
                             description: 'Description of Movie #6',
                             price: 60,
                             image: 'https://i.picsum.photos/id/239/200/300.jpg',
-                            availableQuantity: 5
+                            availableQuantity: 5,
+                            ranking: 0.5
                         }
-                    ],
-                states:{
-                    def: "Please select an option",
-                    RJ:"Rio de Janeiro",
-                    MG:"Minas Gerais",
-                    SP:"São Paulo",
-                    ES:"Espírito Santo"
-                },
+                ],
+                selected: null,
+                states:[
+                        {value: null, text:"Please select an option.", disabled: true},
+                        {
+                            label: 'North',
+                            options: [
+                                {value: "AM", text:"Amazonas"},
+                                {value: "RO", text:"Roraima"},
+                                {value: "AP", text:"Amapá"},
+                                {value: "PA", text:"Pará"},
+                                {value: "TO", text:"Tocantins"},
+                                {value: "RO", text:"Rondônia"},
+                                {value: "AC", text:"Acre"},
+                            ]
+                        },
+                        {
+                            label: 'Northeast',
+                            options: [
+                                {value: "MA", text:"Maranhão"},
+                                {value: "PI", text:"Piauí"},
+                                {value: "CE", text:"Ceará"},
+                                {value: "RN", text:"Rio Grande do Norte"},
+                                {value: "PE", text:"Pernambuco"},
+                                {value: "PB", text:"Paraíba"},
+                                {value: "SE", text:"Sergipe"},
+                                {value: "AL", text:"Alagoas"},
+                                {value: "BA", text:"Bahia"},
+                            ]
+                        },
+                        {
+                            label: 'Midwest',
+                            options: [
+                                {value: "MT", text:"Mato Grosso"},
+                                {value: "MS", text:"Mato Grosso do Sul"},
+                                {value: "GO", text:"Goiás"},
+                            ]
+                        },
+                        {
+                            label: 'Southeast',
+                            options: [
+                                {value: "SP", text:"São Paulo"},
+                                {value: "RJ", text:"Rio de Janeiro"},
+                                {value: "ES", text:"Espírito Santo"},
+                                {value: "MG", text:"Minas Gerais"},
+                            ]
+                        },
+                        {
+                            label: 'South',
+                            options: [
+                                {value: "PR", text:"Paraná"},
+                                {value: "RS", text:"Rio Grande do Sul"},
+                                {value: "SC", text:"Santa Catarina"},
+                            ]
+                        },
+                        {
+                            label: 'Federal District',
+                            options: [
+                                {value: "DF", text:"Distrito Federal"},
+                            ]
+                        },
+                ],
             }
         },
         filters: {
@@ -340,6 +404,7 @@
             },
             addToCart: function (movie) {
                 this.cart.push(movie.id);
+                movie.availableQuantity--;
             },
             movieQuantityInCart: function (movie) {
                 let quantity = 0;
@@ -360,6 +425,7 @@
                 //     return -1;
                 // }
                 return movie.availableQuantity > this.movieQuantityInCart(movie);
+                // return movie.availableQuantity > this.movieQuantityInCart(movie);
             },
             submitForm() {
                 alert("Order created.");
@@ -428,21 +494,6 @@
             },
             city_validFeedback() {
                 return this.city_State === true ? "Valid city!" : "";
-            },
-            state_State() {
-                return this.order.state.length >= 8;
-            },
-            state_invalidFeedback() {
-                if (this.order.state.length >= 8){
-                    return "";
-                } else if (this.order.state.length > 0){
-                    return "Enter a city with at least eight characters.";
-                } else {
-                    return "Enter something...";
-                }
-            },
-            state_validFeedback() {
-                return this.state_State === true ? "Valid state!" : "";
             },
             cep_State() {
                 return this.order.cep.length >= 9;
