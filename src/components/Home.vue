@@ -46,7 +46,7 @@
         </b-card>
 
         <b-container class="row" v-if="showMovies">
-            <b-container class="col-sm-4" v-bind:key="movie.id" v-for="movie in movies">
+            <b-container class="col-sm-4" v-bind:key="movie.id" v-for="movie in orderedMovies">
                 <b-card
                         :title="movie.title"
                         :img-src="movie.image"
@@ -59,18 +59,11 @@
                         {{ movie.description }} <br> {{ movie.price | formatPrice("U$") }}
                     </b-card-text>
 
-                    <b-container>
-                        <span v-if="movie.ranking === 5.0"><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-fill/></span>
-                        <span v-else-if="movie.ranking === 4.5"><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-half/></span>
-                        <span v-else-if="movie.ranking === 4.0"><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-fill/><b-icon-star/></span>
-                        <span v-else-if="movie.ranking === 3.5"><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-half/><b-icon-star/></span>
-                        <span v-else-if="movie.ranking === 3.0"><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-fill/><b-icon-star/><b-icon-star/></span>
-                        <span v-else-if="movie.ranking === 2.5"><b-icon-star-fill/><b-icon-star-fill/><b-icon-star-half/><b-icon-star/><b-icon-star/></span>
-                        <span v-else-if="movie.ranking === 2.0"><b-icon-star-fill/><b-icon-star-fill/><b-icon-star/><b-icon-star/><b-icon-star/></span>
-                        <span v-else-if="movie.ranking === 1.5"><b-icon-star-fill/><b-icon-star-half/><b-icon-star/><b-icon-star/><b-icon-star/></span>
-                        <span v-else-if="movie.ranking === 1.0"><b-icon-star-fill/><b-icon-star/><b-icon-star/><b-icon-star/><b-icon-star/></span>
-                        <span v-else-if="movie.ranking === 0.5"><b-icon-star-half/><b-icon-star/><b-icon-star/><b-icon-star/><b-icon-star/></span>
-                        <span v-else v-for="n in 5" :key="n"><b-icon-star/></span>
+                    <b-container class="ranking">
+                        <span v-for="n in 5" :key="n">
+                            <b-icon-star-fill v-if="n <= movie.ranking"/>
+                            <b-icon-star v-else/>
+                        </span>
                     </b-container>
                     <br><br>
 
@@ -287,7 +280,7 @@
                             price: 20,
                             image: 'https://i.picsum.photos/id/1004/200/300.jpg',
                             availableQuantity: 5,
-                            ranking: 4.5
+                            ranking: 4
                         },
                         {
                             id: 3,
@@ -296,7 +289,7 @@
                             price: 30,
                             image: 'https://i.picsum.photos/id/1011/200/300.jpg',
                             availableQuantity: 5,
-                            ranking: 3.0
+                            ranking: 3
                         },
                         {
                             id: 4,
@@ -305,7 +298,7 @@
                             price: 40,
                             image: 'https://i.picsum.photos/id/1025/200/300.jpg',
                             availableQuantity: 5,
-                            ranking: 2.5
+                            ranking: 2
                         },
                         {
                             id: 5,
@@ -323,7 +316,7 @@
                             price: 60,
                             image: 'https://i.picsum.photos/id/239/200/300.jpg',
                             availableQuantity: 5,
-                            ranking: 0.5
+                            ranking: 0
                         }
                 ],
                 selected: null,
@@ -429,9 +422,25 @@
             },
             submitForm() {
                 alert("Order created.");
+            },
+            checkRanking(n, movie) {
+                return movie.ranking - n >= 0;
             }
         },
         computed: {
+            orderedMovies() {
+                let orderedMovies = this.movies;
+                orderedMovies.sort(function (a, b) {
+                            if (a.title.toLowerCase() < b.title.toLowerCase()){
+                                return -1;
+                            }
+                            if (a.title.toLowerCase() > b.title.toLowerCase()) {
+                                return 1;
+                            }
+                            return 0;
+                });
+                return this.movies;
+            },
             cartQuantity: function () {
                 return this.cart.length;
             },
@@ -518,6 +527,7 @@
 </script>
 
 <style>
+
     #app {
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
